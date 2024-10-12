@@ -1,97 +1,92 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet,TouchableOpacity } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const HomeScreen = ({ navigation, handleLogout }) => {
   return (
-    
     <View style={styles.authContainer}>
-     
-      <Text style={styles.title}>"Waste Eye"</Text>
-      
-      <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={styles.bookingButton}
-        onPress={() => navigation.navigate('Booking')}
-      >
-        <Text style={styles.buttonText}>Go to Booking</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Waste Eye</Text>
 
-      <TouchableOpacity
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.cameraButton}
+          onPress={() => navigation.navigate('Camera')}
+        >
+          <Text style={styles.buttonText}>Open Camera</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={styles.borrowButton}
           onPress={() => navigation.navigate('Borrow')}
         >
           <Text style={styles.buttonText}>Borrow</Text>
         </TouchableOpacity>
-        </View>
-      
-        <TouchableOpacity
-          style={[styles.logoutButton]} // Optional styling for logout button
-          onPress={handleLogout}
-        >
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-        
-      
+      </View>
+
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={handleLogout}
+      >
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    authContainer: {
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      padding: 16,
-      backgroundColor: '#f0f0f0',
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 16,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    buttonContainer: {
-        flexDirection: 'row', // Align buttons horizontally
-        justifyContent: 'space-between', // Space between buttons
-        
-        marginBottom: 10, // Space below the button container
-      },
-      bookingButton: {
-        flex: 1, // Take equal space
-        height: 100,
-        paddingLeft: 16,
-        paddingTop: 16,
-        backgroundColor: '#3498db',
-        borderRadius: 4,
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        marginRight: 10, // Increased space between booking and borrow buttons
-    },
-    
-    borrowButton: {
-        flex: 1, // Take equal space
-        height: 100,
-        paddingLeft: 16,
-        paddingTop: 16,
-        backgroundColor: '#2ecc71', // Different color for the borrow button
-        borderRadius: 4,
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-    },
-
-    buttonText: {
-      color: '#fff', // Text color
-      fontSize: 16, // Font size
-    },
-    logoutButton: {
-        width: '100%', // Full width
-        padding: 16, // Padding for the button
-        backgroundColor: '#e74c3c', // Background color for Logout button
-        borderRadius: 4, // Rounded corners
-        alignItems: 'center', // Center align text
-      },
-  });
+  authContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#f8f9fa',
+  },
+  title: {
+    fontSize: 28,
+    marginBottom: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+  },
+  cameraButton: {
+    flex: 1,
+    height: 120,
+    paddingLeft: 16,
+    paddingTop: 16,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginRight: 10,
+  },
+  borrowButton: {
+    flex: 1,
+    height: 120,
+    paddingLeft: 16,
+    paddingTop: 16,
+    backgroundColor: '#2ecc71',
+    borderRadius: 8,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    width: '100%',
+    padding: 16,
+    backgroundColor: '#e74c3c',
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+});
 
 export default HomeScreen;

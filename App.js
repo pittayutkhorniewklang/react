@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from '@firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
 import HomeScreen from './screens/HomeScreen';
-
+import CameraScreen from './screens/CameraScreen';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuBV8YMp9bH88jqtRIb4zrnOEddfVueIs",
@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: "1:592016365775:web:c78f8c65ba2ef4c8f13fba",
   measurementId: "G-4S0XJDCPKQ"
 };
-
 
 const app = initializeApp(firebaseConfig);
 
@@ -47,11 +46,11 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
       </Text>
     </View>
   );
-}
+};
 
 const Stack = createStackNavigator();
 
-export default App = () => {
+export default function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -95,13 +94,22 @@ export default App = () => {
       <Stack.Navigator>
         {user ? (
           <>
-            <Stack.Screen name="Home">
+            <Stack.Screen
+              name="Home"
+              options={{ headerShown: false }}
+            >
               {(props) => <HomeScreen {...props} handleLogout={handleLogout} />}
             </Stack.Screen>
-            
+            <Stack.Screen
+              name="Camera"
+              component={CameraScreen}
+            />
           </>
         ) : (
-          <Stack.Screen name="Auth">
+          <Stack.Screen
+            name="Auth"
+            options={{ headerShown: false }}
+          >
             {(props) => (
               <AuthScreen
                 {...props}
