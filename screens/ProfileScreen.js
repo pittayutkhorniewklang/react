@@ -1,14 +1,40 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { getAuth } from 'firebase/auth';
 
 const ProfileScreen = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>John Doe</Text>
-        <Text style={styles.subtitle}>john.doe@example.com</Text>
-        <Text style={styles.info}>Location: Bangkok, Thailand</Text>
-        <Text style={styles.info}>Joined: January 2024</Text>
+        <Icon name="person-circle-outline" size={100} color="#3498db" style={styles.icon} />
+        <Text style={styles.title}>
+          {user ? user.displayName || 'Waste Eye' : 'Loading...'}
+        </Text>
+        <Text style={styles.subtitle}>
+          {user ? user.email : 'Loading...'}
+        </Text>
+        <View style={styles.infoContainer}>
+          <Icon name="location-outline" size={24} color="#34495e" />
+          <Text style={styles.infoText}>Bangkok, Thailand</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Icon name="calendar-outline" size={24} color="#34495e" />
+          <Text style={styles.infoText}>Joined: January 2024</Text>
+        </View>
+        <TouchableOpacity style={styles.editButton}>
+          <Text style={styles.editButtonText}>Edit Profile</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -23,8 +49,8 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
+    padding: 30,
+    borderRadius: 20,
     width: '85%',
     alignItems: 'center',
     shadowColor: '#000',
@@ -32,6 +58,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+  },
+  icon: {
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
@@ -42,12 +71,29 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     color: '#7f8c8d',
-    marginBottom: 15,
+    marginBottom: 20,
   },
-  info: {
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  infoText: {
     fontSize: 16,
     color: '#34495e',
-    marginBottom: 5,
+    marginLeft: 10,
+  },
+  editButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

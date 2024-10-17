@@ -26,11 +26,13 @@ const auth = getAuth(app);
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// สร้าง Stack Navigator สำหรับ HomeScreen และ ProfileScreen
-function HomeStack() {
+// สร้าง Stack Navigator สำหรับ HomeScreen และ ProfileScreen โดยส่ง handleLogout
+function HomeStack({ handleLogout }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="HomeScreen">
+        {(props) => <HomeScreen {...props} handleLogout={handleLogout} />}
+      </Stack.Screen>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
@@ -75,8 +77,10 @@ export default function App() {
             tabBarInactiveTintColor: 'gray',
           })}
         >
-          {/* ใช้เพียง Tab.Screen เท่านั้น */}
-          <Tab.Screen name="HomeTab" component={HomeStack} />
+          {/* ส่ง handleLogout ไปยัง HomeStack */}
+          <Tab.Screen name="HomeTab">
+            {(props) => <HomeStack {...props} handleLogout={handleLogout} />}
+          </Tab.Screen>
           <Tab.Screen name="ProfileTab" component={ProfileScreen} />
         </Tab.Navigator>
       ) : (
