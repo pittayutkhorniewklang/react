@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import ProfileScreen from './ProfileScreen';
 
 const HomeScreen = ({ navigation, handleLogout }) => {
   return (
@@ -7,18 +8,12 @@ const HomeScreen = ({ navigation, handleLogout }) => {
       <Text style={styles.title}>Waste Eye</Text>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.cameraButton}
-          onPress={() => navigation.navigate('Camera')}
-        >
-          <Text style={styles.buttonText}>Open Camera</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.borrowButton}
-          onPress={() => navigation.navigate('Borrow')}
+          style={styles.ProfileButton}
+          onPress={() => navigation.navigate('ProfileScreen')}
         >
-          <Text style={styles.buttonText}>Borrow</Text>
+          <Text style={styles.buttonText}>Profile</Text>
         </TouchableOpacity>
       </View>
 
@@ -53,18 +48,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
-  cameraButton: {
-    flex: 1,
-    height: 120,
-    paddingLeft: 16,
-    paddingTop: 16,
-    backgroundColor: '#3498db',
-    borderRadius: 8,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    marginRight: 10,
-  },
-  borrowButton: {
+  ProfileButton: {
     flex: 1,
     height: 120,
     paddingLeft: 16,

@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { initializeApp } from '@firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from '@firebase/auth';
 import HomeScreen from './screens/HomeScreen';
-import CameraScreen from './screens/CameraScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import Login from './screens/Login';
 import Register from './screens/Register';
 
@@ -26,12 +26,12 @@ const auth = getAuth(app);
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// สร้าง Stack Navigator สำหรับ HomeScreen
+// สร้าง Stack Navigator สำหรับ HomeScreen และ ProfileScreen
 function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="CameraScreen" component={CameraScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
 }
@@ -65,8 +65,8 @@ export default function App() {
 
               if (route.name === 'HomeTab') {
                 iconName = focused ? 'home' : 'home-outline';
-              } else if (route.name === 'CameraTab') {
-                iconName = focused ? 'camera' : 'camera-outline';
+              } else if (route.name === 'ProfileTab') {
+                iconName = focused ? 'person' : 'person-outline';
               }
 
               return <Icon name={iconName} size={size} color={color} />;
@@ -75,8 +75,9 @@ export default function App() {
             tabBarInactiveTintColor: 'gray',
           })}
         >
+          {/* ใช้เพียง Tab.Screen เท่านั้น */}
           <Tab.Screen name="HomeTab" component={HomeStack} />
-          <Tab.Screen name="CameraTab" component={CameraScreen} />
+          <Tab.Screen name="ProfileTab" component={ProfileScreen} />
         </Tab.Navigator>
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
