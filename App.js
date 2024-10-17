@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { initializeApp } from '@firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from '@firebase/auth';
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
+import Login from './screens/Login';
+import Register from './screens/Register';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuBV8YMp9bH88jqtRIb4zrnOEddfVueIs",
@@ -18,68 +21,31 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogin, handleAuthentication }) => {
-  return (
-    <View style={styles.authContainer}>
-      <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-      />
-      <View style={styles.buttonContainer}>
-        <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={handleAuthentication} color="#3498db" />
-      </View>
-      <Text style={styles.toggleText} onPress={() => setIsLogin(!isLogin)}>
-        {isLogin ? 'Need an account? Sign Up' : 'Already have an account? Sign In'}
-      </Text>
-    </View>
-  );
-};
+const auth = getAuth(app);
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// สร้าง Stack Navigator สำหรับ HomeScreen
+function HomeStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="CameraScreen" component={CameraScreen} />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [isLogin, setIsLogin] = useState(true);
 
-  const auth = getAuth(app);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
 
     return () => unsubscribe();
-  }, [auth]);
-
-  const handleAuthentication = async () => {
-    try {
-      if (user) {
-        await signOut(auth);
-      } else {
-        if (isLogin) {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
-        }
-      }
-    } catch (error) {
-      console.error('Authentication error:', error.message);
-    }
-  };
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -91,75 +57,33 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {user ? (
-          <>
-            <Stack.Screen
-              name="Home"
-              options={{ headerShown: false }}
-            >
-              {(props) => <HomeScreen {...props} handleLogout={handleLogout} />}
-            </Stack.Screen>
-            <Stack.Screen
-              name="Camera"
-              component={CameraScreen}
-            />
-          </>
-        ) : (
-          <Stack.Screen
-            name="Auth"
-            options={{ headerShown: false }}
-          >
-            {(props) => (
-              <AuthScreen
-                {...props}
-                email={email}
-                setEmail={setEmail}
-                password={password}
-                setPassword={setPassword}
-                isLogin={isLogin}
-                setIsLogin={setIsLogin}
-                handleAuthentication={handleAuthentication}
-              />
-            )}
-          </Stack.Screen>
-        )}
-      </Stack.Navigator>
+      {user ? (
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              if (route.name === 'HomeTab') {
+                iconName = focused ? 'home' : 'home-outline';
+              } else if (route.name === 'CameraTab') {
+                iconName = focused ? 'camera' : 'camera-outline';
+              }
+
+              return <Icon name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: '#3498db',
+            tabBarInactiveTintColor: 'gray',
+          })}
+        >
+          <Tab.Screen name="HomeTab" component={HomeStack} />
+          <Tab.Screen name="CameraTab" component={CameraScreen} />
+        </Tab.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  authContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f0f0f0',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  input: {
-    height: 50,
-    width: '100%',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  toggleText: {
-    color: '#3498db',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-});
