@@ -9,6 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import Login from './screens/Login';
 import Register from './screens/Register';
+import ScanScreen from './screens/ScanScreen';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuBV8YMp9bH88jqtRIb4zrnOEddfVueIs",
@@ -26,14 +27,27 @@ const auth = getAuth(app);
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// สร้าง Stack Navigator สำหรับ HomeScreen และ ProfileScreen โดยส่ง handleLogout
-function HomeStack({ handleLogout }) {
+// HomeStack ไม่มีปุ่ม Logout
+function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeScreen">
-        {(props) => <HomeScreen {...props} handleLogout={handleLogout} />}
-      </Stack.Screen>
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="ScanScreen" component={ScanScreen} />
+    </Stack.Navigator>
+  );
+}
+
+// ProfileStack มีปุ่ม Logout
+function ProfileStack({ user, handleLogout }) {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {user ? (
+        <Stack.Screen name="ProfileScreen">
+          {(props) => <ProfileScreen {...props} handleLogout={handleLogout} />}
+        </Stack.Screen>
+      ) : (
+        <Stack.Screen name="Login" component={Login} />
+      )}
     </Stack.Navigator>
   );
 }
@@ -52,6 +66,7 @@ export default function App() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      setUser(null); // อัปเดตสถานะผู้ใช้เมื่อทำการ Logout
     } catch (error) {
       console.error('Logout error:', error.message);
     }
@@ -59,36 +74,31 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {user ? (
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-              if (route.name === 'HomeTab') {
-                iconName = focused ? 'home' : 'home-outline';
-              } else if (route.name === 'ProfileTab') {
-                iconName = focused ? 'person' : 'person-outline';
-              }
+            if (route.name === 'HomeTab') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'ProfileTab') {
+              iconName = focused ? 'person' : 'person-outline';
+            } else if (route.name === 'ScanTab') {
+              iconName = focused ? 'scan' : 'scan-outline'; 
+            }
 
-              return <Icon name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: '#3498db',
-            tabBarInactiveTintColor: 'gray',
-          })}
-        >
-          {/* ส่ง handleLogout ไปยัง HomeStack */}
-          <Tab.Screen name="HomeTab">
-            {(props) => <HomeStack {...props} handleLogout={handleLogout} />}
-          </Tab.Screen>
-          <Tab.Screen name="ProfileTab" component={ProfileScreen} />
-        </Tab.Navigator>
-      ) : (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-        </Stack.Navigator>
-      )}
+            return <Icon name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#3498db',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
+        <Tab.Screen name="HomeTab" component={HomeStack} />
+        <Tab.Screen name="ScanTab" component={ScanScreen} />
+        <Tab.Screen name="ProfileTab">
+          {(props) => <ProfileStack {...props} user={user} handleLogout={handleLogout} />}
+        </Tab.Screen>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

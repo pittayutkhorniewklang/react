@@ -1,75 +1,57 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import ProfileScreen from './ProfileScreen';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const HomeScreen = ({ navigation, handleLogout }) => {
+const HomeScreen = ({ navigation }) => {
   return (
-    <View style={styles.authContainer}>
-      <Text style={styles.title}>Waste Eye</Text>
+    <ImageBackground
+      source={{ uri: 'https://w0.peakpx.com/wallpaper/415/865/HD-wallpaper-lone-wolf-nature.jpg' }} // เปลี่ยน URL รูปตามต้องการ
+      style={styles.background}
+    >
+      {/* ลบกรอบดำออก ใช้เพียงข้อความและปุ่ม */}
+      <Text style={styles.title}>Welcome to Waste Eye</Text>
 
-      <View style={styles.buttonContainer}>
-
-        <TouchableOpacity
-          style={styles.ProfileButton}
-          onPress={() => navigation.navigate('ProfileScreen')}
-        >
-          <Text style={styles.buttonText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
-
+      {/* ปุ่มสำหรับกด Scan */}
       <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={handleLogout}
+        style={styles.scanButton}
+        onPress={() => navigation.navigate('ScanScreen')}
       >
-        <Text style={styles.buttonText}>Logout</Text>
+        <Icon name="scan-outline" size={30} color="#fff" />
+        <Text style={styles.buttonText}>Scan Now</Text>
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  authContainer: {
+  background: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f8f9fa',
+    width: '100%', // ทำให้ภาพเต็มจอ
+    height: '100%', // ทำให้ภาพเต็มจอ
   },
   title: {
-    fontSize: 28,
-    marginBottom: 24,
+    fontSize: 30,
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    color: '#fff',
     marginBottom: 20,
+    textAlign: 'center',
   },
-  ProfileButton: {
-    flex: 1,
-    height: 120,
-    paddingLeft: 16,
-    paddingTop: 16,
-    backgroundColor: '#2ecc71',
-    borderRadius: 8,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+  scanButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#3498db',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  logoutButton: {
-    width: '100%',
-    padding: 16,
-    backgroundColor: '#e74c3c',
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
+    marginLeft: 10,
   },
 });
 

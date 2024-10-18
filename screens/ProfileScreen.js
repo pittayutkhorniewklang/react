@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { getAuth } from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ handleLogout }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -32,8 +32,15 @@ const ProfileScreen = () => {
           <Icon name="calendar-outline" size={24} color="#34495e" />
           <Text style={styles.infoText}>Joined: January 2024</Text>
         </View>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
+        
+
+
+        {/* Add Logout button */}
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+        >
+          <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -91,6 +98,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    backgroundColor: '#e74c3c',
+    borderRadius: 8,
+  },
+  logoutButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
